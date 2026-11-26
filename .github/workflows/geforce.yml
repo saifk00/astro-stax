@@ -33,16 +33,19 @@ jobs:
         run: uv run --no-sync python scripts/benchmark_geforce.py --output geforce.json
       - name: Summarize warm medians
         run: |
-          {
-            jq -r '"### " + .gpu' geforce.json
-            echo '| Frames | Resident (s) | End to end (s) | Peak tensors (GiB) |'
-            echo '| ---: | ---: | ---: | ---: |'
-            jq -r '
-              def fmt: . * 1000 | round / 1000;
-              .cases[] | if .status == "ok" then
-                "| \(.frames) | \(.resident_s | fmt) | \(.end_to_end_s | fmt) | \(.peak_tensor_bytes / 1073741824 | fmt) |"
-              else "| \(.frames) | Out of memory | — | — |" end' geforce.json
-          } >> "$GITHUB_STEP_SUMMARY"
+          uv run --no-sync python - <<'PYTHON' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          report = json.loads(Path("geforce.json").read_text())
+          print("###", report["gpu"])
+          print("| Frames | Resident (s) | End to end (s) | Peak tensors (GiB) |")
+          print("| ---: | ---: | ---: | ---: |")
+          for case in report["cases"]:
+              if case["status"] == "ok":
+                  print(f"| {case['frames']} | {case['resident_s']:.3f} | {case['end_to_end_s']:.3f} | {case['peak_tensor_bytes'] / 2**30:.3f} |")
+              else:
+                  print(f"| {case['frames']} | Out of memory | — | — |")
+          PYTHON
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: geforce-${{ matrix.card }}-${{ github.run_id }}-${{ github.run_attempt }}

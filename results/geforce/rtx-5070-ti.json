@@ -1,0 +1,123 @@
+{
+  "commit": "6894f8eba4391f1316d93390c36a30cba78a46cf",
+  "driver": "610.88",
+  "cpu": "AMD Ryzen 7 9800X3D 8-Core Processor",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vram_bytes": 17094475776,
+  "compute_capability": [
+    12,
+    0
+  ],
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+  "cpu_count": 16,
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "triton": "3.9.0",
+  "shape": [
+    4000,
+    6000
+  ],
+  "seed": 5070,
+  "cases": [
+    {
+      "frames": 8,
+      "status": "ok",
+      "resident_s": 0.07047194894403219,
+      "end_to_end_s": 0.1589859409723431,
+      "peak_tensor_bytes": 649238016,
+      "master_sha256": "7ea2c06d7d423566d28494652a21332b640db0b29843a069fa3fd43fc658c829",
+      "runs": [
+        {
+          "resident_s": 0.07052101800218225,
+          "end_to_end_s": 0.24399147205986083,
+          "peak_tensor_bytes": 649238016
+        },
+        {
+          "resident_s": 0.07035925798118114,
+          "end_to_end_s": 0.1589859409723431,
+          "peak_tensor_bytes": 649238016
+        },
+        {
+          "resident_s": 0.07047194894403219,
+          "end_to_end_s": 0.1544833320658654,
+          "peak_tensor_bytes": 649238016
+        }
+      ]
+    },
+    {
+      "frames": 21,
+      "status": "ok",
+      "resident_s": 0.07375271804630756,
+      "end_to_end_s": 0.21190567105077207,
+      "peak_tensor_bytes": 1273967104,
+      "master_sha256": "4fa7630ef9a49f77bc9a30d5bb7e62c32ef3aaa2564c846d62664753f71f3de9",
+      "runs": [
+        {
+          "resident_s": 0.07428082404658198,
+          "end_to_end_s": 0.22589541296474636,
+          "peak_tensor_bytes": 1273967104
+        },
+        {
+          "resident_s": 0.07375271804630756,
+          "end_to_end_s": 0.211461661150679,
+          "peak_tensor_bytes": 1273967104
+        },
+        {
+          "resident_s": 0.0733736960683018,
+          "end_to_end_s": 0.21190567105077207,
+          "peak_tensor_bytes": 1273967104
+        }
+      ]
+    },
+    {
+      "frames": 64,
+      "status": "ok",
+      "resident_s": 0.10536718089133501,
+      "end_to_end_s": 0.4234019860159606,
+      "peak_tensor_bytes": 3337559552,
+      "master_sha256": "b88dc22150966781fb7b7f92914743533d049df23c3b88f29a5e525df25a59dc",
+      "runs": [
+        {
+          "resident_s": 0.10536718089133501,
+          "end_to_end_s": 0.4673645091243088,
+          "peak_tensor_bytes": 3337559552
+        },
+        {
+          "resident_s": 0.10517913289368153,
+          "end_to_end_s": 0.42308542295359075,
+          "peak_tensor_bytes": 3337559552
+        },
+        {
+          "resident_s": 0.10550999897532165,
+          "end_to_end_s": 0.4234019860159606,
+          "peak_tensor_bytes": 3337559552
+        }
+      ]
+    },
+    {
+      "frames": 128,
+      "status": "ok",
+      "resident_s": 0.19079263205640018,
+      "end_to_end_s": 0.7805182998999953,
+      "peak_tensor_bytes": 6455304192,
+      "master_sha256": "b6648f989e91194ffae9642fc6753bfcd0dfd26e5b063d6a77a09369faf16a1f",
+      "runs": [
+        {
+          "resident_s": 0.19079263205640018,
+          "end_to_end_s": 0.8501370679587126,
+          "peak_tensor_bytes": 6455304192
+        },
+        {
+          "resident_s": 0.19088342413306236,
+          "end_to_end_s": 0.7798119329381734,
+          "peak_tensor_bytes": 6455304192
+        },
+        {
+          "resident_s": 0.18993448396213353,
+          "end_to_end_s": 0.7805182998999953,
+          "peak_tensor_bytes": 6455304192
+        }
+      ]
+    }
+  ]
+}

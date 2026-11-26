@@ -93,3 +93,29 @@ and wheel with `uv build`. The resulting wheel is
 `dist/astro_stax-0.1.0-py3-none-any.whl`.
 
 astro-stax is distributed under GPL-3.0-or-later.
+
+## Consumer GPU benchmarks
+
+Run the same workload on a Linux or WSL2 desktop with:
+
+```sh
+uv run --locked python scripts/benchmark_geforce.py --output geforce.json
+```
+
+The default sweep uses 8, 21, 64 and 128 deterministic synthetic 24 MP flats
+and needs about 6 GiB of scratch disk in the current directory. Each case
+gets one warm-up and three timed runs. Resident time covers the stack with
+inputs and normalization levels already on the GPU. End-to-end time includes
+reading FITS, computing levels, stacking, downloading and writing the master
+with a warm filesystem cache. The JSON records individual timings, peak tensor
+memory, hardware, commit and a checksum of the master pixels. An out-of-memory
+case is recorded at its original frame count.
+
+The GeForce workflow runs Sundays at 06:17 UTC and supports manual runs on
+`main`. To enable a card, register an isolated Linux x64 runner with a model
+label, then add that label to the repository variable `GEFORCE_RUNNERS`
+(a JSON array such as `["rtx-3060-12gb", "rtx-4060-8gb"]`). Only list
+available runners. Use dedicated environments for self-hosted Actions on a
+public repository. Each run uploads one JSON artifact per card. The two native
+Siril comparison tests additionally require the reference executables in the
+test checkout.

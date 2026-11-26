@@ -26,7 +26,7 @@ def _variance_probe(sums, divisors, output, reciprocals):
 
 
 class CudaCompilationTests(unittest.TestCase):
-    def test_compile_winsorized_flat_kernel_for_rtx_5070_ti(self):
+    def test_compile_winsorized_flat_kernel_for_geforce_targets(self):
         from triton.backends.compiler import GPUTarget
         from triton.compiler import ASTSource
 
@@ -37,10 +37,12 @@ class CudaCompilationTests(unittest.TestCase):
                          PACKED=False, refinements_out=None, PACK_REJECTION_COUNTS=False,
                          survivor_bits_out=None)
         signature.update(dict.fromkeys(constants, "constexpr"))
-        kernel = triton.compile(ASTSource(_fast, signature, constants),
-                                target=GPUTarget("cuda", 120, 32),
-                                options={"num_warps": 1, "enable_fp_fusion": False})
-        self.assertTrue(kernel.asm["cubin"])
+        for gpu, sm in (("RTX 3060", 86), ("RTX 4060", 89), ("RTX 5070 Ti", 120)):
+            with self.subTest(gpu=gpu, sm=sm):
+                kernel = triton.compile(ASTSource(_fast, signature, constants),
+                                        target=GPUTarget("cuda", sm, 32),
+                                        options={"num_warps": 1, "enable_fp_fusion": False})
+                self.assertTrue(kernel.asm["cubin"])
 
 
 @unittest.skipUnless(torch.cuda.is_available(), "CUDA required")

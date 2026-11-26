@@ -1,0 +1,54 @@
+[project]
+name = "astro-stax"
+version = "0.1.0"
+description = "Stack astrophotography flat frames on NVIDIA GPUs with Siril-compatible rejection"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+keywords = ["astrophotography", "flat-field", "FITS", "CUDA", "Triton"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: GPU :: NVIDIA CUDA",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+dependencies = [
+    "astropy>=8.0.3",
+    "numpy",
+    "torch~=2.15.0",
+    "triton==3.9.0",
+]
+
+[project.urls]
+Repository = "https://github.com/saifk00/astro-stax"
+Issues = "https://github.com/saifk00/astro-stax/issues"
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+# These earlier experiments remain available in the development checkout.
+exclude = ["/stax/_calibration.py", "/stax/_photometry.py", "/stax/_stacking.py"]
+dev-mode-dirs = ["."]
+
+[tool.hatch.build.targets.wheel]
+packages = ["stax"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"examples/siril_stack_flats.py" = "stax/siril_stack_flats.py"
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "stax", "README.md", "LICENSE", "pyproject.toml",
+    "examples", "tests/test_image.py", "tests/test_siril_compat.py",
+]
+
+[tool.uv]
+cache-dir = ".cache/uv"
+
+[dependency-groups]
+dev = ["matplotlib>=3.11.2", "rawpy"]

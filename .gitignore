@@ -1,0 +1,13 @@
+.venv/
+.cache/
+.local/
+__pycache__/
+*.py[cod]
+*.egg-info/
+benchmarks/runs/
+benchmarks/experiments/
+build/
+dist/
+.ruff_cache/
+/siril/
+/test_data/

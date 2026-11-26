@@ -1,0 +1,3 @@
+requires 1.5.0
+set32bits
+stack flat_ rej winsorized 3 3 -norm=mul -32b -out=master_flat.fits

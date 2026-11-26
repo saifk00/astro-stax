@@ -1,5 +1,7 @@
 # astro-stax
 
+- [x] Tests run on every push. [![Tests on main](https://github.com/saifk00/astro-stax/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/saifk00/astro-stax/actions/workflows/tests.yml?query=branch%3Amain)
+
 STAX builds a master flat from astrophotography flat frames on an NVIDIA GPU.
 Its Python API implements Siril’s average stack with multiplicative input
 normalization, winsorized sigma clipping and float32 output. The result stays

@@ -14,7 +14,7 @@ import triton.language as tl
 from stax import Sequence
 from stax._background import INV_USHORT, estimate_backgrounds_u16
 from stax.io import read_fits
-from stax._siril_compat import _small_stack_variance, _variance_reciprocals, stack_siril_u16
+from stax._siril_compat import _fast, _small_stack_variance, _variance_reciprocals, stack_siril_u16
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -23,6 +23,24 @@ ROOT = Path(__file__).resolve().parents[1]
 def _variance_probe(sums, divisors, output, reciprocals):
     i = tl.program_id(0)
     tl.store(output + i, _small_stack_variance(tl.load(sums + i), tl.load(divisors + i), reciprocals))
+
+
+class CudaCompilationTests(unittest.TestCase):
+    def test_compile_winsorized_flat_kernel_for_rtx_5070_ti(self):
+        from triton.backends.compiler import GPUTarget
+        from triton.compiler import ASTSource
+
+        # Compile the 21-flat specialization without initializing a CUDA device.
+        signature = dict(source="*u16", coefficients="*fp64", output="*fp32", counts="*i32",
+                         steps_out="*i16", replay_out="*i1", pixels="i32", reciprocals="*fp64")
+        constants = dict(N=21, SIGMA=3.0, CAP=21, BP=1, BF=32, MULTIPLY=True, WINSOR=True,
+                         PACKED=False, refinements_out=None, PACK_REJECTION_COUNTS=False,
+                         survivor_bits_out=None)
+        signature.update(dict.fromkeys(constants, "constexpr"))
+        kernel = triton.compile(ASTSource(_fast, signature, constants),
+                                target=GPUTarget("cuda", 120, 32),
+                                options={"num_warps": 1, "enable_fp_fusion": False})
+        self.assertTrue(kernel.asm["cubin"])
 
 
 @unittest.skipUnless(torch.cuda.is_available(), "CUDA required")

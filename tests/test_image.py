@@ -18,6 +18,26 @@ from stax.io import _load_u16_cuda, load_fits_host, read_fits, write_fits
 from stax._siril_compat import _fast, stack_siril_u16
 
 
+class HostFitsTests(unittest.TestCase):
+    def test_unsigned_fits_sequence_preserves_adu_and_input_order(self):
+        pixels = np.array([[0, 1, 32767, 32768, 65535]], dtype=np.uint16)
+        with tempfile.TemporaryDirectory() as tmp:
+            first, second = Path(tmp) / "first.fits", Path(tmp) / "second.fits"
+            write_fits(first, pixels)
+            write_fits(second, ~pixels)
+            batch, metadata = load_fits_host([second, first])
+        np.testing.assert_array_equal(batch, np.stack([~pixels, pixels]))
+        self.assertEqual(batch.dtype, np.uint16)
+        self.assertEqual(metadata["paths"], (str(second), str(first)))
+
+    def test_normalization_of_constant_and_empty_histograms(self):
+        hist = torch.zeros((2, 65536), dtype=torch.int32)
+        hist[0, 32768] = 21
+        levels = _levels_from_histogram(hist)
+        self.assertAlmostEqual(levels[0].item(), 32768.0, places=2)
+        self.assertTrue(torch.isnan(levels[1]).item())
+
+
 @unittest.skipUnless(torch.cuda.is_available(), "CUDA required")
 class ImageTests(unittest.TestCase):
     def test_sequence_from_resident_images(self):
